@@ -30,9 +30,9 @@ public class Acceptor  implements Runnable{
     public void run() {
         SocketChannel socketChannel;
         try {
-                // »ñÈ¡¿Í»§¶Ë
+                // è·å–å®¢æˆ·ç«¯è¿æ¥
                 socketChannel = serverSocketChannel.accept();
-                System.out.println("¿Í»§¶ËÁ¬½Ó³É¹¦");
+                System.out.println("å®¢æˆ·ç«¯è¿æ¥æˆåŠŸ");
                 if(socketChannel != null) {
                     new Handler(socketChannel, selector);
                 }

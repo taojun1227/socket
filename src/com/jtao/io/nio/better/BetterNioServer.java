@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * <p>Title: BetterNioServer </p>
  *
- * <p>Description: ÓÅ»¯NIO</p>
+ * <p>Description: ???NIO</p>
  *
  * <p>Company: </p>
  *
@@ -29,26 +29,26 @@ public class BetterNioServer {
     public BetterNioServer(int port) throws IOException {
         this.selector = Selector.open();
         this.serverSocketChannel = ServerSocketChannel.open();
-        // °ó¶¨¼àÌı¶Ë¿Ú
+        // ç»‘å®šç«¯å£
         serverSocketChannel.bind(new InetSocketAddress(port));
-        //ÉèÖÃÎª·Ç×èÈû
+        // è®¾ç½®ä¸ºéé˜»å¡
         serverSocketChannel.configureBlocking(false);
-        //×î¿ªÊ¼¸øchannel×¢²áµÄÊÂ¼ş¶¼ÊÇaccept£¬Á¬½ÓÊÂ¼ş
+        // æ³¨å†Œè¿æ¥äº‹ä»¶
        SelectionKey selectionKey =  serverSocketChannel.register(this.selector, SelectionKey.OP_ACCEPT);
-       // ¸øÕâ¸öÊÂ¼ş°ó¶¨Ò»¸ö´¦ÀíÆ÷
+       // ç»‘å®šäº‹ä»¶å¤„ç†å™¨
         selectionKey.attach(new Acceptor(this.serverSocketChannel, this.selector));
     }
 
     public void run() {
         try {
             while (!Thread.interrupted()) {
-                //¼àÌıÍ¨µÀµÄ¾ÍĞ÷ÊÂ¼ş£¬Èç¹ûÃ»ÓĞ¾ÍĞ÷Ê±¼ä¾Í×èÈû,·µ»Ø¾ÍÊÂ¼şµÄ¸öÊı
-                System.out.println("µÈ´ı¿Í»§¶ËÉÏÃÅ");
+                //è·å– å°±ç»ªçš„äº‹ä»¶
+                System.out.println("ç­‰å¾…å°±ç»ªäº‹ä»¶");
                 int count  =selector.select();
-//                System.out.println("¿Í»§ÉÏÃÅÁË");
-                //ÄÃµ½ËùÓĞµÄ¾ÍĞ÷Ê±¼äµÄ¼¯ºÏ
+                System.out.println("æ‰¾åˆ°å°±ç»ªäº‹ä»¶");
+                // è·å–å°±ç»ªäº‹ä»¶
                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
-                System.out.println( "¾ÍĞ÷ÊÂ¼şµÄ´óĞ¡£º"+selectionKeys.size());
+                System.out.println( "å°±ç»ªäº‹ä»¶ä¸ªæ•°"+selectionKeys.size());
                 Iterator<SelectionKey> iterator = selectionKeys.iterator();
                 while (iterator.hasNext()) {
                     dispatch(((SelectionKey) (iterator.next())));

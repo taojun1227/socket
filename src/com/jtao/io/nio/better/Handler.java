@@ -56,13 +56,13 @@ public class Handler implements Runnable{
                 default:
             }
         } catch (IOException e) {
-            System.err.println("read»òÕßsendÊ±ºò·¢ÉúÒì³££¡ Òì³£ĞÅÏ¢£º" + e.getMessage());
+            System.err.println("readæˆ–è€…sendå¼‚å¸¸,æŠ¥é”™ä¿¡æ¯" + e.getMessage());
             selectionKey.cancel();
 
             try {
                 socketChannel.close();
             } catch (IOException ioException) {
-                System.err.println("¹Ø±ÕÍ¨µÀÊ±·¢ÉúÒì³££¡Òì³£ĞÅÏ¢£º" + ioException.getMessage());
+                System.err.println("å…³é—­é€šé“å¼‚å¸¸ï¼ŒæŠ¥é”™ä¿¡æ¯" + ioException.getMessage());
                 ioException.printStackTrace();
             }
         } finally {
@@ -71,37 +71,37 @@ public class Handler implements Runnable{
 
     private void read() throws IOException {
         if(selectionKey.isReadable()) {
-            System.out.println("½øÈë¶Á·½·¨");
+            System.out.println("è¿›å…¥éƒ½äº‹ä»¶");
             readBuffer.clear();
             int count = socketChannel.read(readBuffer);
             if(count >0) {
-                System.out.println(String.format("ÊÕµ½¿Í»§¶Ë %s ÏûÏ¢£º%s",
+                System.out.println(String.format("æ”¶åˆ°å®¢æˆ·ç«¯ %s æ¶ˆæ¯ï¼š %s",
                         socketChannel.getRemoteAddress(), new String(readBuffer.array())));
                 status = SEND;
-                // ×¢²áĞ´ÊÂ¼ş
+                // ä¿®æ”¹ä¸ºå†™äº‹ä»¶
                 selectionKey.interestOps(SelectionKey.OP_WRITE);
             } else {
-                // read ³¡¾°ÏÂÈ¡µ½Ğ¡ÓÚ0£¬ËµÃ÷¿Í»§¶Ë¶Ï¿ªÁ¬½Ó
                 selectionKey.cancel();
                 socketChannel.close();
-                System.out.println("readÊ±-------Á¬½Ó¹Ø±Õ");
+                System.out.println("readÊ±-------è¿æ¥æ–­å¼€");
             }
         }
     }
     private void send() throws IOException {
         if(selectionKey.isWritable()) {
-            System.out.println("½øÈëĞ´·½·¨");
+            System.out.println("è¿›å…¥å†™äº‹ä»¶");
             sendBuffer.clear();
             sendBuffer.put("response ok".getBytes());
             sendBuffer.flip();
             int count = socketChannel.write(sendBuffer);
             status = READ;
             if(count < 0 ) {
-                // Í¬ÉÏ£¬write³¡¾°ÏÂ£¬È¡µ½-1£¬ Ò²ÒâÎ¶×Å¿Í»§¶Ë¶Ï¿ªÁ¬½Ó
                 selectionKey.cancel();
                 socketChannel.close();
-                System.out.println("sendÊ±-------Á¬½Ó¹Ø±Õ");
+                System.out.println("send-------è¿æ¥æ–­å¼€");
             }
+            status = READ;
+            selectionKey.interestOps(SelectionKey.OP_READ);
         }
     }
 }
